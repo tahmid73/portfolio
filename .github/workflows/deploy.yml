@@ -20,10 +20,12 @@ jobs:
 
       - name: Set up SSH key
         run: |
+          mkdir -p ~/.ssh
           echo "$SSH_PUBLIC_KEY" > ssh_key.pub
           chmod 600 ssh_key.pub
           ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
           mv ssh_key.pub ~/.ssh/id_rsa.pub
+
 
       - name: Deploy
         run: |
