@@ -23,7 +23,6 @@ jobs:
           # You can use SSH or any other method to copy the built app to your Azure VM.
           # Example using SSH and SCP:
           scp -i <(echo "$SSH_PRIVATE_KEY") -r ./build/* ssh_key:/usr/share/nginx/html
-          scp -i <(echo "$SSH_PRIVATE_KEY") -r ./build/* ssh_key:/path/to/your/web/root
           rm -f ssh_key
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
