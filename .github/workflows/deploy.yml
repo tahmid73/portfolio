@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy
         run: |
-          echo "$SSH_PUBLIC_KEY" > SSH_PUBLIC_KEY
-          echo "$SSH_KEY" > SSH_KEY
+          echo "${{ secrets.SSH_PUBLIC_KEY }} > SSH_PUBLIC_KEY
+          echo "${{ secrets.SSH_KEY }}" > SSH_KEY
           scp -i SSH_PUBLIC_KEY -r ./build/* SSH_KEY:/usr/share/nginx/html
           rm -f SSH_KEY
