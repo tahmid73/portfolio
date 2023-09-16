@@ -20,4 +20,6 @@ jobs:
 
       - name: Deploy
         run: |
-          scp -i ${{ secrets.SSH_PUBLIC_KEY }} -r ./build/* ${{ secrets.SSH_KEY }}:/usr/share/nginx/html
+          # scp -i ${{ secrets.SSH_PUBLIC_KEY }} -r ./build/* ${{ secrets.SSH_KEY }}:/usr/share/nginx/html
+          scp -i <(echo "${{ secrets.SSH_PUBLIC_KEY }}") -r ./build/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_SERVER_IP }}:/usr/share/nginx/html
+
