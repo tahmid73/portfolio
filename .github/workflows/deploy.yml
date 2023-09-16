@@ -18,14 +18,18 @@ jobs:
           npm install
           npm run build
 
+      - name: Set up SSH key
+        run: |
+          echo "$SSH_PUBLIC_KEY" > ssh_key.pub
+          chmod 600 ssh_key.pub
+          ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
+          mv ssh_key.pub ~/.ssh/id_rsa.pub
+
       - name: Deploy
         run: |
-          # scp -i ${{ secrets.SSH_PUBLIC_KEY }} -r ./build/* ${{ secrets.SSH_KEY }}:/usr/share/nginx/html
-          # scp -i <(echo "${{ secrets.SSH_PUBLIC_KEY }}") -r ./build/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_SERVER_IP }}:/usr/share/nginx/html
-          echo "$SSH_PRIVATE_KEY" > deploy_key.pem
-          chmod 600 deploy_key.pem
-          scp -i deploy_key.pem -r ./build/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_SERVER_IP }}:/usr/share/nginx/html
-          rm -f deploy_key.pem
+          scp -i ~/.ssh/id_rsa.pub -r ./build/* $SSH_USERNAME@$SSH_SERVER_IP:/path/to/your/destination
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
 
