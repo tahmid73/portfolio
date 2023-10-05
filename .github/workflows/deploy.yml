@@ -27,10 +27,11 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_PUBLIC_KEY" > ~/.ssh/ssh_key.pub
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/ssh_key.pub
           chmod 600 ~/.ssh/ssh_key.pub
-          ssh-keyscan -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
-          mv ~/.ssh/ssh_key.pub ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_SERVER_IP }} >> ~/.ssh/known_hosts
+          mv ~/.ssh/ssh_key.pub ~/.ssh/id_rsa.pub
+
 
 
 
