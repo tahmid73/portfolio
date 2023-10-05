@@ -37,7 +37,7 @@ jobs:
 
       - name: Deploy
         run: |
-          scp -i ~/.ssh/id_rsa.pub -r ./build/* $SSH_USERNAME@$SSH_SERVER_IP:/path/to/your/destination
+          scp -i ~/.ssh/id_rsa.pub -r ./build/* ${{ secrets.SSH_USERNAME }}${{ secrets.SSH_SERVER_IP }}:/path/to/your/destination
         env:
           SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
