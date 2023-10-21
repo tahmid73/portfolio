@@ -23,14 +23,12 @@ jobs:
           echo "SSH_SERVER_IP: $SSH_SERVER_IP"
           echo "SSH_PUBLIC_KEY: $SSH_PUBLIC_KEY"
 
-
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_SERVER_IP }} >> ~/.ssh/known_hosts
-
 
       - name: Copy Code to Azure VM
         run: |
@@ -39,14 +37,3 @@ jobs:
       - name: Deploy
         run: |
           ssh -i ~/.ssh/id_rsa tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
-
-
-      # - name: Deploy
-      #   run: |
-      #     ssh -i ${{ secrets.SSH_PUBLIC_KEY }} tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
-      #   env:
-      #     SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
-      #     SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-      #     SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-
-
