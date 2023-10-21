@@ -37,7 +37,7 @@ jobs:
 
       - name: Deploy
         run: |
-          scp ${{ secrets.SSH_PUBLIC_KEY }} -r ./build/* ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_SERVER_IP }}:/path/to/your/destination
+          ssh -i ${{ secrets.SSH_PUBLIC_KEY }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
         env:
           SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
