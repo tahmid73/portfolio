@@ -17,23 +17,24 @@ jobs:
         run: |
           npm install
           npm run build
-      
+
+      - name: Set up SSH key and SSH agent
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.YOUR_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+
       - name: Debug SSH Key
         run: |
           echo "SSH_SERVER_IP: $SSH_SERVER_IP"
           echo "SSH_PUBLIC_KEY: $SSH_PUBLIC_KEY"
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_SERVER_IP }} >> ~/.ssh/known_hosts
-
       - name: Copy Code to Azure VM
         run: |
-          scp -i ~/.ssh/id_rsa -r ./* tahmid@${{ secrets.SSH_SERVER_IP }}:/var/www/html/
+          scp -r ./* tahmid@${{ secrets.SSH_SERVER_IP }}:/var/www/html/
 
       - name: Deploy
         run: |
-          ssh -i ~/.ssh/id_rsa tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
+          ssh tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
