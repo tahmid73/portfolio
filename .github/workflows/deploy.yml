@@ -27,22 +27,26 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/ssh_key.pub
-          chmod 600 ~/.ssh/ssh_key.pub
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_SERVER_IP }} >> ~/.ssh/known_hosts
-          mv ~/.ssh/ssh_key.pub ~/.ssh/id_rsa.pub
+
 
       - name: Copy Code to Azure VM
         run: |
-          scp -i ${{ secrets.SSH_PUBLIC_KEY }} -r ./* tahmid@${{ secrets.SSH_SERVER_IP }}:/var/www/html/
-
+        scp -i ~/.ssh/id_rsa -r ./* tahmid@${{ secrets.SSH_SERVER_IP }}:/var/www/html/
 
       - name: Deploy
         run: |
-          ssh -i ${{ secrets.SSH_PUBLIC_KEY }} tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
-        env:
-          SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          ssh -i ~/.ssh/id_rsa tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
+
+
+      # - name: Deploy
+      #   run: |
+      #     ssh -i ${{ secrets.SSH_PUBLIC_KEY }} tahmid@${{ secrets.SSH_SERVER_IP }} "cd /var/www/html/ && git pull && npm install && npm run build"
+      #   env:
+      #     SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
+      #     SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      #     SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
 
 
