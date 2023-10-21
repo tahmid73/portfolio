@@ -34,7 +34,7 @@ jobs:
 
       - name: Copy Code to Azure VM
         run: |
-        scp -i ~/.ssh/id_rsa -r ./* tahmid@${{ secrets.SSH_SERVER_IP }}:/var/www/html/
+          scp -i ~/.ssh/id_rsa -r ./* tahmid@${{ secrets.SSH_SERVER_IP }}:/var/www/html/
 
       - name: Deploy
         run: |
